@@ -1,51 +1,38 @@
-// ES6 Syntax 
-// getting react
-// Same as var React = require('react');
-import React from 'react';
+import _ from 'lodash';
+import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import YTSearch from 'youtube-api-search';
-// importing components
 import SearchBar from './components/SearchBar';
-
-// deconstructed variable
-// import React, { Component }from 'react';
-
 import { apiKey } from '../config.js';
 
+class App extends Component {
 
-// let is a variable that can be changed.
-// this is assigning Component to React.Component
-// Example
-// let Component = React.Component
-// rewrite of class
-// class App extends Component 
-
-class App extends React.Component {
-
-  constructor() {
+  constructor () {
     super();
-
     this.state = {
       videos: [],
       selectedVideo: null
-    }
-    this.videoSearch('developers');
+    };
+    this.videoSearch('programming');
   }
 
   videoSearch(term) {
-    YTSearch({ key: apiKey, term: term}, (videos) => {
-      console.log(videos);
-    })
+    YTSearch({ key: apiKey, term:term}, (videos) => {
+      this.setState({
+        videos,
+        selectedVideo: videos[0]
+      });
+    });
   }
-
+  //must have render in every react component
+  //it can only return one elelement, everything must be wrapped in a parent div
   render() {
+    const videoSearch = _.debounce((term) => { this.videoSearch(term) }, 300);
     return (
       <div>
-        <SearchBar />
+        <SearchBar onSearchTermChange={videoSearch} />
       </div>
     )
   }
 }
-
-// Instantiate 
 ReactDom.render(<App />, document.querySelector('.container'));

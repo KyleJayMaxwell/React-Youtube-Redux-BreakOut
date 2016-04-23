@@ -1,29 +1,23 @@
 import React, { Component } from 'react';
 
 class SearchBar extends Component {
-  constructor() {
+  constructor(props) {
     // first line has to be super
-    super();
-    this.setState = {term: ''}
+    super(props);
+    this.state = { term: '' }
   }
 
   onInputChange(term) {
     // if you have a key value pair of same name you don't need both  
     this.setState({ term });
+    this.props.onSearchTermChange(term);
   }
 
   render () {
     return (
       <div className="search-bar">
         <h1>YouTube Redux</h1>
-        <input
-          value={ // brackets make it so you can write JS
-            this.state.term
-          }
-          onChange = { // ES6 Arrow Function
-            event => this.onInputChange(event.target.value)
-          }
-        />
+        <input value={this.state.term}onChange = {event => this.onInputChange(event.target.value)} />
       </div>
     )
   }
